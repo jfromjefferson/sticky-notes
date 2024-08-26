@@ -1,0 +1,63 @@
+* {
+    font-family: "Nunito", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --white: #ffffff;
+    --gray-100: #E1E1E6;
+    --gray-300: #C4C4CC;
+    --gray-400: #8D8D99;
+    --gray-500: #7C7C8A;
+    --gray-600: #323238;
+    --gray-700: #29292E;
+    --gray-800: #202024;
+    --gray-900: #121214;
+    --green-300: #00B37E;
+    --green-500: #00875F;
+    --green-700: #015F43;
+    --red-500: #AB222E;
+    --red-700: #7A1921;
+    --yellow-500: #FBA94C;
+}
+
+
+body {
+    background-color: var(--gray-600);
+    --webkit-font-smoothing: antialiased;
+}
+
+html, body, #root {
+    height: 100%;
+    padding: 0.5rem;
+}
+
+.mr-1 {
+    margin-right: 0.3rem;
+}
+
+.mr-2 {
+    margin-right: 0.5rem;
+}
+
+.mr-3 {
+    margin-right: 1rem;
+}
+
+.mr-4 {
+    margin-right: 1.5rem;
+}
+
+.mr-5 {
+    margin-right: 2rem;
+}
+
+.btn-outline-secondary {
+    border-color: #d9d9d9 !important;
+}
+
+.flex-1 {
+    flex: 1;
+}

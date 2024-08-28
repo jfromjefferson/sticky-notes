@@ -5,16 +5,15 @@ import { Coordinates } from '@dnd-kit/core/dist/types';
 
 interface ISticky {
     id: string
-    coordinates: Coordinates
 }
 
-export function Sticky({ id, coordinates }: ISticky) {
+export function Sticky({ id }: ISticky) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id,
     });
 
-    const style = coordinates ? {
-    transform: `translate3d(${coordinates.x}px, ${coordinates.y}px, 0)`,
+    const style = transform ? {
+    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
     } : undefined;
 
     return (

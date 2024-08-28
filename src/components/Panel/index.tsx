@@ -1,30 +1,38 @@
-import { v4 } from 'uuid'
+import { useCallback, useState } from 'react'
 import { Header } from '../Header'
-import { Sticky } from '../Sticky'
 import styles from './styles.module.scss'
-import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core'
-import { useState } from 'react'
-import { Coordinates, DragMoveEvent } from '@dnd-kit/core/dist/types'
+import { closestCenter, DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { arrayMove, SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
+import { Item } from '../Item';
+import { SortableItem } from '../Sortable'
 
 export function Panel() {
-    const list = [v4(),v4(),v4(),v4()]
-    const [transform, setTransform] = useState<Coordinates>({
-        x: 0,
-        y: 0
-    })
+    const [items, setItems] = useState(Array.from({ length: 200 }, (_, i) => (i + 1).toString()))
+    const [activeId, setActiveId] = useState<string | null>(null)
+    const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor))
 
-    function handleDragStart(event: DragStartEvent) {}
-
-    function handleDragMove(event: DragMoveEvent) {
-        setTransform(event.delta)
-    }
+    const handleDragStart = useCallback((event: DragStartEvent) => {
+        setActiveId(event.active.id.toString());
+    }, [])
     
-    function handleDragEnd(event: DragEndEvent) {
-        setTransform(event.delta)
-        
-    }
+    const handleDragEnd = useCallback((event: DragEndEvent) => {
+        const { active, over } = event;
 
-    console.log(transform)
+        if (active.id !== over?.id) {
+            setItems((items) => {
+                const oldIndex = items.indexOf(active.id.toString());
+                const newIndex = items.indexOf(over!.id.toString());
+
+                return arrayMove(items, oldIndex, newIndex);
+            });
+        }
+
+        setActiveId(null);
+    }, [])
+
+    const handleDragCancel = useCallback(() => {
+        setActiveId(null);
+    }, [])
 
     return (
         <div className={styles.panel}>
@@ -32,12 +40,20 @@ export function Panel() {
             <main>
                 <h2>Notes</h2>
                 <div className={styles.sticky_area}>
-                    <DndContext  onDragStart={handleDragStart} onDragMove={(event) => handleDragMove(event)} onDragEnd={handleDragEnd}>
-                        {
-                            list.map(item => (
-                                <Sticky key={item} id={item} coordinates={transform} />
-                            ))
-                        }
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={handleDragStart}
+                        onDragEnd={handleDragEnd}
+                        onDragCancel={handleDragCancel}>
+                        <SortableContext items={items} strategy={rectSortingStrategy}>
+                            {items.map((id) => (
+                                <SortableItem key={id} id={id} />
+                            ))}
+                        </SortableContext>
+                        <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
+                            {activeId ? <Item id={activeId} isDragging /> : null}
+                        </DragOverlay>
                     </DndContext>
                 </div>
             </main>

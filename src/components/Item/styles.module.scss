@@ -1,0 +1,12 @@
+
+.sticky_card {
+    margin: 5px;
+    transform-origin: 50% 50%;
+    height: 140px;
+    width: 140px;
+    border-radius: 10px;
+    background-color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

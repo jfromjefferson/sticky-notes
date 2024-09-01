@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react'
 import { Header } from '../Header'
 import styles from './styles.module.scss'
-import { closestCenter, DndContext, DragEndEvent, DragOverlay, DragStartEvent, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { closestCenter, DndContext, DragEndEvent, DragStartEvent, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { arrayMove, SortableContext, rectSortingStrategy } from '@dnd-kit/sortable'
-import { Item } from '../Item';
 import { SortableItem } from '../Sortable'
 
 export function Panel() {
@@ -17,6 +16,10 @@ export function Panel() {
     
     const handleDragEnd = useCallback((event: DragEndEvent) => {
         const { active, over } = event;
+
+        if(!over) {
+            return
+        }
 
         if (active.id !== over?.id) {
             setItems((items) => {
@@ -51,9 +54,6 @@ export function Panel() {
                                 <SortableItem key={id} id={id} />
                             ))}
                         </SortableContext>
-                        <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
-                            {activeId ? <Item id={activeId} isDragging /> : null}
-                        </DragOverlay>
                     </DndContext>
                 </div>
             </main>
